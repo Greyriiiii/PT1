@@ -1,15 +1,12 @@
 /* General Styling */
 body {
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
     background-color: #212121;
 }
 
 header, footer {
     background-color: #212121;
     color: white;
-    padding: 15px 0;
     text-align: center;
 }
 
@@ -17,6 +14,9 @@ header .logo h1 {
     margin: 0.4;
 }
 
+h2{
+    color: #efefef;
+}
 
 body {
     font-family: Arial, sans-serif;
@@ -78,10 +78,19 @@ body {
 
 .upload-container {
     padding: 20px;
-    margin: 20px;
-    background-color: #fff;
+    margin: 20px auto;
+    background-color: #646464;
+    border-radius: 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    top: -50%;
+    width: 100%;
+    max-width: 660px;
+    text-align: left;
 }
+
+
+
 
 .upload-container input, .upload-container input[type="text"] {
     display: block;
@@ -90,7 +99,8 @@ body {
 
 .upload-container button {
     padding: 10px 20px;
-    background-color: #1877f2;
+    background-color: #1b56a8;
+    font-size: medium;
     color: white;
     border: none;
     border-radius: 5px;
@@ -178,10 +188,15 @@ body {
 
 /* Footer Styling */
 .footer {
-    background-color: #333;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
     color: white;
-    padding: 10px 0;
+    padding: 10px 0; /* Increased padding for better appearance */
+    text-align: center; /* Centers text */
 }
+
 
 /* for removal /*/
 * {
@@ -194,7 +209,7 @@ body {
 html,
 body {
     display: grid;
-    height: 115%;
+    height: 120%;
     place-items: center;
     background-color: #212121;
 }
@@ -318,4 +333,8 @@ body {
 .radio-3:checked~.slidebar,
 .radio-3+label:hover~.slidebar {
     transform: translateX(200%) scaleX(1);
+}
+a {
+    text-decoration: none; /* Removes underline */
+    display: inline-block; /* Makes sure it wraps the label */
 }
