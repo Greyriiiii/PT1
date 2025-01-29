@@ -7,6 +7,7 @@ const progressBar = document.getElementById('progressBar');
 let storyQueue = [];
 let currentStoryIndex = 0;
 let progressTimeout;
+let isAllStoriesShown = false; // To track if all stories have been shown
 
 function addStories() {
     const mediaInput = document.getElementById('mediaInput');
@@ -40,6 +41,9 @@ function addStories() {
         }
 
         storyElement.addEventListener('click', () => {
+            // Prevent the footer from showing immediately when a new story is added
+            isAllStoriesShown = false; 
+            
             storyQueue = Array.from(storiesContainer.children)
                 .filter(child => child !== storiesContainer.children[0])
                 .map(child => ({
@@ -69,6 +73,10 @@ function showStory(index) {
     storyViewerContent.innerHTML = '';
     storyViewerTitle.textContent = story.title;
 
+    // Hide the footer when the story is shown
+    let footer = document.querySelector("footer");
+    footer.style.display = "none"; 
+
     // Create and add the close button
     const closeButton = document.createElement('button');
     closeButton.textContent = 'Close';
@@ -81,6 +89,9 @@ function showStory(index) {
         }
         storyViewer.classList.remove('active');
         clearTimeout(progressTimeout);
+
+        // Show the footer when the viewer is closed, even if not all stories are finished
+        footer.style.display = "block"; 
     });
 
     storyViewerContent.appendChild(closeButton);
@@ -89,14 +100,38 @@ function showStory(index) {
         const img = document.createElement('img');
         img.src = story.src;
         storyViewerContent.appendChild(img);
-        updateProgressBar(5000, () => showStory(index + 1));
+        updateProgressBar(5000, () => {
+            if (index + 1 < storyQueue.length) {
+                showStory(index + 1);  // Show the next story
+            } else {
+                isAllStoriesShown = true; // Mark that all stories are shown
+                footer.style.display = "block";  // Show the footer after all stories
+            }
+        });
     } else if (story.type === 'video') {
         const video = document.createElement('video');
         video.src = story.src;
         video.autoplay = true;
         storyViewerContent.appendChild(video);
         video.onloadedmetadata = () => {
-            updateProgressBar(15000, () => showStory(index + 1));
+            updateProgressBar(15000, () => {
+                if (index + 1 < storyQueue.length) {
+                    showStory(index + 1);  // Show the next story
+                } else {
+                    isAllStoriesShown = true; // Mark that all stories are shown
+                    footer.style.display = "block";  // Show the footer after all stories
+                }
+            });
+        };
+
+        video.onended = () => {
+            // Automatically show the next story when the video ends
+            if (index + 1 < storyQueue.length) {
+                showStory(index + 1);
+            } else {
+                isAllStoriesShown = true;
+                footer.style.display = "block";  // Show the footer after the last video ends
+            }
         };
     }
 
