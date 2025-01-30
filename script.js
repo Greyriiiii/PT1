@@ -67,7 +67,9 @@ function showStory(index) {
 
     // Hide footer when viewing stories
     let footer = document.querySelector("footer");
-    footer.style.display = "none";
+    if (footer) {
+        footer.style.display = "none";
+    }
 
     const closeButton = document.createElement('button');
     closeButton.textContent = 'X';
@@ -75,9 +77,20 @@ function showStory(index) {
     closeButton.addEventListener('click', closeStoryViewer);
     storyViewerContent.appendChild(closeButton);
 
+    // Apply 9:16 aspect ratio
+    storyViewerContent.style.display = "flex";
+    storyViewerContent.style.justifyContent = "center";
+    storyViewerContent.style.alignItems = "center";
+    storyViewerContent.style.width = "100%";
+    storyViewerContent.style.height = "100vh"; // Full screen height
+
     if (story.type === 'image') {
         const img = document.createElement('img');
         img.src = story.src;
+        img.style.width = "auto";
+        img.style.height = "100%"; // Maintain 9:16 aspect ratio
+        img.style.maxWidth = "56.25vh"; // Ensures 9:16 ratio (9/16 = 0.5625)
+        img.style.objectFit = "cover"; // Ensures it fits properly
         storyViewerContent.appendChild(img);
         updateProgressBar(5000, () => showNextStory(index));
     } else if (story.type === 'video') {
@@ -85,6 +98,10 @@ function showStory(index) {
         video.src = story.src;
         video.autoplay = true;
         video.controls = true;
+        video.style.width = "auto";
+        video.style.height = "100%"; // Maintain 9:16 aspect ratio
+        video.style.maxWidth = "56.25vh"; // Ensures 9:16 ratio
+        video.style.objectFit = "cover";
         storyViewerContent.appendChild(video);
 
         video.onloadedmetadata = () => {
@@ -98,6 +115,7 @@ function showStory(index) {
 
     storyViewer.classList.add('active');
 }
+
 
 function showNextStory(index) {
     if (index + 1 < storyQueue.length) {
@@ -129,3 +147,4 @@ function updateProgressBar(duration, callback) {
         }, duration);
     });
 }
+
