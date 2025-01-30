@@ -204,7 +204,6 @@ h2 {
     overflow-x: auto;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
-    z-index: 0;
 }
 
 .wrapper input {
@@ -302,7 +301,121 @@ h2 {
     transform: translateX(200%) scaleX(1);
 }
 
+/* rahhhhh */
+
 a {
     text-decoration: none;
     display: inline-block;
 }
+body {
+    background: #212121;
+  }
+  
+  .stories-container {
+    max-width: 650px;
+    margin: 24px auto;
+    position: relative;
+  }
+  
+  .stories-container .previous-btn,
+  .stories-container .next-btn,
+  .stories-full-view .previous-btn,
+  .stories-full-view .next-btn {
+    width: 30px;
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #444;
+    color: #fff;
+    border-radius: 50%;
+    padding: 10px;
+    display: flex;
+    cursor: pointer;
+  }
+  
+  .stories-container .previous-btn,
+  .stories-container .next-btn {
+    opacity: 0;
+    pointer-events: none;
+    transition: all 400ms ease;
+  }
+  
+  .stories-container .previous-btn.active,
+  .stories-container .next-btn.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  
+  .stories-container .previous-btn,
+  .stories-full-view .previous-btn {
+    left: 8px;
+  }
+  
+  .stories-container .next-btn,
+  .stories-full-view .next-btn {
+    right: 8px;
+  }
+  
+  .stories-container .story {
+    height: 180px;
+    width: 120px;
+    flex-shrink: 0;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+  }
+  
+  .stories-container .story img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .stories-container .stories {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .stories-container .content {
+    overflow-x: scroll;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+  }
+  
+  .stories-container .content::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .stories-full-view {
+    position: fixed;
+    background: rgba(0, 0, 0, 0.9);
+    display: none;
+    place-items: center;
+  }
+  
+  .stories-full-view.active {
+    display: grid;
+  }
+  
+  .stories-full-view .content {
+    height: 90vh;
+    width: 100%;
+    max-width: 700px;
+    position: relative;
+  }
+  
+  .stories-full-view .story {
+    height: 100%;
+    text-align: center;
+  }
+  
+  .stories-full-view .story img {
+    height: 100%;
+    aspect-ratio: 9/16;
+    object-fit: cover;
+    border-radius: 16px;
+  }
+  
+  
