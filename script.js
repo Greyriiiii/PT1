@@ -70,7 +70,7 @@ function showStory(index) {
     footer.style.display = "none";
 
     const closeButton = document.createElement('button');
-    closeButton.textContent = 'Close';
+    closeButton.textContent = 'X';
     closeButton.classList.add('close-button');
     closeButton.addEventListener('click', closeStoryViewer);
     storyViewerContent.appendChild(closeButton);
