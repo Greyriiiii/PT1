@@ -105,7 +105,9 @@ function showStory(index) {
         storyViewerContent.appendChild(video);
 
         video.onloadedmetadata = () => {
-            updateProgressBar(video.duration * 1000, () => showNextStory(index));
+            if (video.duration > 0) {
+                updateProgressBar(video.duration * 1000, () => showNextStory(index));
+            }
         };
 
         video.onended = () => {
@@ -115,6 +117,7 @@ function showStory(index) {
 
     storyViewer.classList.add('active');
 }
+
 
 
 function showNextStory(index) {
@@ -128,9 +131,25 @@ function showNextStory(index) {
 function closeStoryViewer() {
     storyViewer.classList.remove('active');
     clearTimeout(progressTimeout);
+
+    // Stop any playing video
+    const video = storyViewerContent.querySelector('video');
+    if (video) {
+        video.pause();
+        video.src = ""; // Remove source to stop loading
+        video.load(); // Force reload to clear cache
+    }
+
+    // Clear the content to prevent playback persistence
+    storyViewerContent.innerHTML = '';
+
+    // Show footer again
     let footer = document.querySelector("footer");
-    footer.style.display = "block";
+    if (footer) {
+        footer.style.display = "block";
+    }
 }
+
 
 function updateProgressBar(duration, callback) {
     progressBar.style.width = '0%';
