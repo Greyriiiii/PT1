@@ -7,13 +7,12 @@ const progressBar = document.getElementById('progressBar');
 let storyQueue = [];
 let currentStoryIndex = 0;
 let progressTimeout;
-let isAllStoriesShown = false; // To track if all stories have been shown
 
 function addStories() {
     const mediaInput = document.getElementById('mediaInput');
     const storyTitleInput = document.getElementById('storyTitle');
     const files = Array.from(mediaInput.files);
-    const storyTitle = storyTitleInput.value.trim();
+    const storyTitle = storyTitleInput.value.trim() || "Untitled Story";
 
     if (files.length === 0) {
         alert('Please select at least one image or video.');
@@ -24,7 +23,6 @@ function addStories() {
         const storyElement = document.createElement('div');
         storyElement.classList.add('story');
         const url = URL.createObjectURL(file);
-        const title = storyTitle || "Untitled Story";
 
         if (file.type.startsWith('image/')) {
             const img = document.createElement('img');
@@ -40,17 +38,11 @@ function addStories() {
             return;
         }
 
+        // Add story to queue
+        const newStory = { src: url, type: file.type.startsWith('image/') ? 'image' : 'video', title: storyTitle };
+        storyQueue.push(newStory);
+
         storyElement.addEventListener('click', () => {
-            // Prevent the footer from showing immediately when a new story is added
-            isAllStoriesShown = false; 
-            
-            storyQueue = Array.from(storiesContainer.children)
-                .filter(child => child !== storiesContainer.children[0])
-                .map(child => ({
-                    src: child.querySelector('img, video').src,
-                    type: child.querySelector('img') ? 'image' : 'video',
-                    title: title
-                }));
             currentStoryIndex = storyQueue.findIndex(item => item.src === url);
             showStory(currentStoryIndex);
         });
@@ -73,73 +65,57 @@ function showStory(index) {
     storyViewerContent.innerHTML = '';
     storyViewerTitle.textContent = story.title;
 
-    // Hide the footer when the story is shown
+    // Hide footer when viewing stories
     let footer = document.querySelector("footer");
-    footer.style.display = "none"; 
+    if (footer) {
+        footer.style.display = "none";
+    }
 
-    // Create and add the close button
     const closeButton = document.createElement('button');
-    closeButton.textContent = 'Close';
+    closeButton.textContent = 'X';
     closeButton.classList.add('close-button');
-    closeButton.addEventListener('click', () => {
-        const video = storyViewerContent.querySelector('video');
-        if (video) {
-            video.pause();
-            video.currentTime = 0;
-        }
-        storyViewer.classList.remove('active');
-        clearTimeout(progressTimeout);
-
-        // Show the footer when the viewer is closed, even if not all stories are finished
-        footer.style.display = "block"; 
-    });
-
+    closeButton.addEventListener('click', closeStoryViewer);
     storyViewerContent.appendChild(closeButton);
+
+    // Apply 9:16 aspect ratio
+    storyViewerContent.style.display = "flex";
+    storyViewerContent.style.justifyContent = "center";
+    storyViewerContent.style.alignItems = "center";
+    storyViewerContent.style.width = "100%";
+    storyViewerContent.style.height = "100vh"; // Full screen height
 
     if (story.type === 'image') {
         const img = document.createElement('img');
         img.src = story.src;
+        img.style.width = "auto";
+        img.style.height = "100%"; // Maintain 9:16 aspect ratio
+        img.style.maxWidth = "56.25vh"; // Ensures 9:16 ratio (9/16 = 0.5625)
+        img.style.objectFit = "cover"; // Ensures it fits properly
         storyViewerContent.appendChild(img);
-        updateProgressBar(5000, () => {
-            if (index + 1 < storyQueue.length) {
-                showStory(index + 1);  // Show the next story
-            } else {
-                isAllStoriesShown = true; // Mark that all stories are shown
-                footer.style.display = "block";  // Show the footer after all stories
-            }
-        });
+        updateProgressBar(5000, () => showNextStory(index));
     } else if (story.type === 'video') {
         const video = document.createElement('video');
         video.src = story.src;
         video.autoplay = true;
+        video.controls = true;
+        video.style.width = "auto";
+        video.style.height = "100%"; // Maintain 9:16 aspect ratio
+        video.style.maxWidth = "56.25vh"; // Ensures 9:16 ratio
+        video.style.objectFit = "cover";
         storyViewerContent.appendChild(video);
+
         video.onloadedmetadata = () => {
-            updateProgressBar(15000, () => {
-                if (index + 1 < storyQueue.length) {
-                    showStory(index + 1);  // Show the next story
-                } else {
-                    isAllStoriesShown = true; // Mark that all stories are shown
-                    footer.style.display = "block";  // Show the footer after all stories
-                }
-            });
+            updateProgressBar(video.duration * 1000, () => showNextStory(index));
         };
 
         video.onended = () => {
-            // Automatically show the next story when the video ends
-            if (index + 1 < storyQueue.length) {
-                showStory(index + 1);
-            } else {
-                isAllStoriesShown = true;
-                footer.style.display = "block";  // Show the footer after the last video ends
-            }
+            showNextStory(index);
         };
     }
 
     storyViewer.classList.add('active');
 }
 
-<<<<<<< Updated upstream
-=======
 
 function showNextStory(index) {
     if (index + 1 < storyQueue.length) {
@@ -150,23 +126,20 @@ function showNextStory(index) {
 }
 
 function closeStoryViewer() {
-    storyViewer.classList.remove('active');
-    clearTimeout(progressTimeout);
+  storyViewer.classList.remove('active');
+  clearTimeout(progressTimeout);
 
-    // Stop video if playing
-    const video = storyViewerContent.querySelector("video");
-    if (video) {
-        video.pause();
-        video.currentTime = 0; // Reset to the beginning
-    }
+  // Stop any playing video
+  const video = storyViewerContent.querySelector('video');
+  if (video) {
+      video.pause();
+      video.currentTime = 0; // Reset to start
+  }
 
-    // Show footer again (only if it exists)
-    let footer = document.querySelector("footer");
-    if (footer) footer.style.display = "block";
+  let footer = document.querySelector("footer");
+  if (footer) footer.style.display = "block";
 }
 
-
->>>>>>> Stashed changes
 function updateProgressBar(duration, callback) {
     progressBar.style.width = '0%';
     progressBar.style.transition = 'none';
@@ -175,15 +148,13 @@ function updateProgressBar(duration, callback) {
         progressBar.style.transition = `width ${duration}ms linear`;
         progressBar.style.width = '100%';
 
-        setTimeout(() => {
+        progressTimeout = setTimeout(() => {
             if (typeof callback === 'function') {
                 callback();
             }
         }, duration);
     });
 }
-<<<<<<< Updated upstream
-=======
 
 /*remove*/
 
@@ -283,4 +254,3 @@ previousBtnFull.addEventListener("click", () => {
   currentActive--;
   updateFullView();
 });
->>>>>>> Stashed changes
