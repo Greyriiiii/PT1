@@ -1,7 +1,7 @@
 /* General Styling */
 body {
     font-family: Arial, sans-serif;
-    background-color: #fffbd8;
+    background-color: #212121;
     margin: 0;
     padding: 0;
 }
@@ -229,7 +229,7 @@ h2 {
     font-weight: 500;
     color: #212121;
     background: transparent;
-    padding: 12px 16px;
+    padding: 12px 10px;
     width: 100px;
     min-width: 50px;
     text-decoration: none;
@@ -294,29 +294,31 @@ h2 {
 }
 
 /* Navigation Active State */
+/* Navigation Active State */
 .radio-1:checked ~ .bar,
 .radio-1:checked ~ .slidebar {
-    transform: translateX(0) scaleX(1);
+    transform: translateX(-4%) scaleX(1);
 }
 
 .radio-2:checked ~ .bar,
 .radio-2:checked ~ .slidebar {
-    transform: translateX(100%) scaleX(1);
+    transform: translateX(87%) scaleX(1);
 }
 
 .radio-3:checked ~ .bar,
 .radio-3:checked ~ .slidebar {
-    transform: translateX(200%) scaleX(1);
+    transform: translateX(179%) scaleX(1);
+}
+
+.radio-4:checked ~ .bar,
+.radio-4:checked ~ .slidebar {
+    transform: translateX(253%) scaleX(1);
 }
 
 /* rahhhhh */
 a {
     text-decoration: none;
     display: inline-block;
-}
-
-body {
-    background: #212121;
 }
 
 .stories-container {
@@ -426,3 +428,5 @@ body {
     object-fit: cover;
     border-radius: 16px;
 }
+
+

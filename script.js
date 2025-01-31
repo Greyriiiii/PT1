@@ -203,12 +203,9 @@ const createStories = () => {
     story.classList.add("story");
     const img = document.createElement("img");
     img.src = s.imageUrl;
-    const author = document.createElement("div");
-    author.classList.add("author");
-    author.innerHTML = s.author;
+
 
     story.appendChild(img);
-    story.appendChild(author);
 
     storiesContainer.appendChild(story);
 
