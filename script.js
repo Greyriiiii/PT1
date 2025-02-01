@@ -1,3 +1,37 @@
+// Dark Mode//
+
+        // Dark Mode Toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const body = document.body;
+
+        darkModeToggle.addEventListener('click', function() {
+            body.classList.toggle('dark-mode');
+            const icon = darkModeToggle.querySelector('.material-symbols-outlined');
+            if (body.classList.contains('dark-mode')) {
+                icon.textContent = 'light_mode';  // Change icon to 'light_mode'
+            } else {
+                icon.textContent = 'dark_mode';   // Change icon back to 'dark_mode'
+            }
+        });
+
+
+// File Name // 
+// JavaScript to display the uploaded file name
+document.getElementById('mediaInput').addEventListener('change', function() {
+    var fileInput = document.getElementById('mediaInput');
+    var fileNameDisplay = document.getElementById('fileNameDisplay');
+    
+    // Check if files are selected
+    if (fileInput.files.length > 0) {
+        var fileName = fileInput.files[0].name;  // Get the name of the first file
+        fileNameDisplay.textContent = 'Selected File: ' + fileName; // Display the file name
+    } else {
+        fileNameDisplay.textContent = '';  // Clear the file name display if no file is selected
+    }
+});
+
+// For Stories //
+
 const storiesContainer = document.getElementById('storiesContainer');
 const storyViewer = document.getElementById('storyViewer');
 const storyViewerContent = document.getElementById('storyViewerContent');
@@ -7,13 +41,13 @@ const progressBar = document.getElementById('progressBar');
 let storyQueue = [];
 let currentStoryIndex = 0;
 let progressTimeout;
-let isAllStoriesShown = false; // To track if all stories have been shown
 
+// Function to add stories
 function addStories() {
     const mediaInput = document.getElementById('mediaInput');
     const storyTitleInput = document.getElementById('storyTitle');
     const files = Array.from(mediaInput.files);
-    const storyTitle = storyTitleInput.value.trim();
+    const storyTitle = storyTitleInput.value.trim() || "Untitled Story";
 
     if (files.length === 0) {
         alert('Please select at least one image or video.');
@@ -24,7 +58,6 @@ function addStories() {
         const storyElement = document.createElement('div');
         storyElement.classList.add('story');
         const url = URL.createObjectURL(file);
-        const title = storyTitle || "Untitled Story";
 
         if (file.type.startsWith('image/')) {
             const img = document.createElement('img');
@@ -40,17 +73,11 @@ function addStories() {
             return;
         }
 
+        // Add story to queue
+        const newStory = { src: url, type: file.type.startsWith('image/') ? 'image' : 'video', title: storyTitle };
+        storyQueue.push(newStory);
+
         storyElement.addEventListener('click', () => {
-            // Prevent the footer from showing immediately when a new story is added
-            isAllStoriesShown = false; 
-            
-            storyQueue = Array.from(storiesContainer.children)
-                .filter(child => child !== storiesContainer.children[0])
-                .map(child => ({
-                    src: child.querySelector('img, video').src,
-                    type: child.querySelector('img') ? 'image' : 'video',
-                    title: title
-                }));
             currentStoryIndex = storyQueue.findIndex(item => item.src === url);
             showStory(currentStoryIndex);
         });
@@ -60,84 +87,77 @@ function addStories() {
 
     storyTitleInput.value = '';
     mediaInput.value = '';
+
+    updateNavigationButtons(); // Update navigation buttons after stories are added
 }
 
+// Function to show a story
 function showStory(index) {
     if (index < 0 || index >= storyQueue.length) {
-        storyViewer.classList.remove('active');
-        clearTimeout(progressTimeout);
+        closeStoryViewer();
         return;
     }
 
-    const story = storyQueue[index];
+    currentStoryIndex = index;
+    const story = storyQueue[currentStoryIndex];
+
     storyViewerContent.innerHTML = '';
     storyViewerTitle.textContent = story.title;
-
-    // Hide the footer when the story is shown
     let footer = document.querySelector("footer");
-    footer.style.display = "none"; 
+    if (footer) footer.style.display = "none";
 
-    // Create and add the close button
     const closeButton = document.createElement('button');
-    closeButton.textContent = 'Close';
+    closeButton.textContent = 'X';
     closeButton.classList.add('close-button');
-    closeButton.addEventListener('click', () => {
-        const video = storyViewerContent.querySelector('video');
-        if (video) {
-            video.pause();
-            video.currentTime = 0;
-        }
-        storyViewer.classList.remove('active');
-        clearTimeout(progressTimeout);
-
-        // Show the footer when the viewer is closed, even if not all stories are finished
-        footer.style.display = "block"; 
-    });
-
+    closeButton.addEventListener('click', closeStoryViewer);
     storyViewerContent.appendChild(closeButton);
 
     if (story.type === 'image') {
         const img = document.createElement('img');
         img.src = story.src;
+        img.style.height = "100%"; // Maintain 9:16 aspect ratio
+        img.style.maxWidth = "56.25vh"; // Ensures 9:16 ratio (9/16 = 0.5625)
+        img.style.objectFit = "cover"; // Ensures it fits properly
         storyViewerContent.appendChild(img);
-        updateProgressBar(5000, () => {
-            if (index + 1 < storyQueue.length) {
-                showStory(index + 1);  // Show the next story
-            } else {
-                isAllStoriesShown = true; // Mark that all stories are shown
-                footer.style.display = "block";  // Show the footer after all stories
-            }
-        });
-    } else if (story.type === 'video') {
+        updateProgressBar(5000, showNextStory);
+    } else {
         const video = document.createElement('video');
         video.src = story.src;
         video.autoplay = true;
+        video.controls = true;
+        video.style.height = "100%"; // Maintain 9:16 aspect ratio
+        video.style.maxWidth = "56.25vh";
+        video.style.objectFit = "cover";
         storyViewerContent.appendChild(video);
+
         video.onloadedmetadata = () => {
-            updateProgressBar(15000, () => {
-                if (index + 1 < storyQueue.length) {
-                    showStory(index + 1);  // Show the next story
-                } else {
-                    isAllStoriesShown = true; // Mark that all stories are shown
-                    footer.style.display = "block";  // Show the footer after all stories
-                }
-            });
+            updateProgressBar(video.duration * 1000, showNextStory);
         };
 
-        video.onended = () => {
-            // Automatically show the next story when the video ends
-            if (index + 1 < storyQueue.length) {
-                showStory(index + 1);
-            } else {
-                isAllStoriesShown = true;
-                footer.style.display = "block";  // Show the footer after the last video ends
-            }
-        };
+        video.onended = showNextStory;
     }
 
     storyViewer.classList.add('active');
 }
 
+// Close story viewer
+function closeStoryViewer() {
+    storyViewer.classList.remove('active');
+    clearTimeout(progressTimeout);
+
+    let footer = document.querySelector("footer");
+    if (footer) footer.style.display = "block";
+
+    const video = storyViewerContent.querySelector('video');
+    if (video) {
+        video.pause();
+        video.currentTime = 0;
+    }
+
+    progressBar.style.width = '0%';
+}
+
+// Function to update the progress bar
 function updateProgressBar(duration, callback) {
     progressBar.style.width = '0%';
     progressBar.style.transition = 'none';
@@ -146,10 +166,48 @@ function updateProgressBar(duration, callback) {
         progressBar.style.transition = `width ${duration}ms linear`;
         progressBar.style.width = '100%';
 
-        setTimeout(() => {
-            if (typeof callback === 'function') {
-                callback();
-            }
+        progressTimeout = setTimeout(() => {
+            if (typeof callback === 'function') callback();
         }, duration);
     });
 }
+
+// Show next story
+function showNextStory() {
+    if (currentStoryIndex < storyQueue.length - 1) {
+        showStory(currentStoryIndex + 1);
+    } else {
+        closeStoryViewer(); // Close viewer if no more stories
+    }
+}
+
+// Show previous story
+function showPreviousStory() {
+    if (currentStoryIndex > 0) {
+        showStory(currentStoryIndex - 1);
+    }
+}
+
+// Create the initial stories when page loads or after upload
+const createStories = () => {
+  allStories.forEach((s, i) => {
+    const story = document.createElement("div");
+    story.classList.add("story");
+    const img = document.createElement("img");
+    img.src = s.imageUrl;
+
+
+    story.appendChild(img);
+
+    storiesContainer.appendChild(story);
+
+    story.addEventListener("click", () => {
+      showFullView(i);
+    });
+  });
+
+  updateNavigationButtons(); // Ensure buttons are updated after initial stories load
+};
+
+createStories();
+
