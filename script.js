@@ -1,18 +1,27 @@
 // Dark Mode//
+// Dark Mode Toggle
+const darkModeToggle = document.getElementById('darkModeToggle');
+const body = document.body;
 
-        // Dark Mode Toggle
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        const body = document.body;
+darkModeToggle.addEventListener('click', function() {
+    body.classList.toggle('dark-mode');
+    const icon = darkModeToggle.querySelector('.material-symbols-outlined');
 
-        darkModeToggle.addEventListener('click', function() {
-            body.classList.toggle('dark-mode');
-            const icon = darkModeToggle.querySelector('.material-symbols-outlined');
-            if (body.classList.contains('dark-mode')) {
-                icon.textContent = 'light_mode';  // Change icon to 'light_mode'
-            } else {
-                icon.textContent = 'dark_mode';   // Change icon back to 'dark_mode'
-            }
-        });
+    // Add animation class
+    icon.classList.add('icon-animation');
+
+    // Change the icon text content based on dark mode status
+    if (body.classList.contains('dark-mode')) {
+        icon.textContent = 'light_mode';  // Change icon to 'light_mode'
+    } else {
+        icon.textContent = 'dark_mode';   // Change icon back to 'dark_mode'
+    }
+
+    // Remove the animation class after animation duration to reset
+    setTimeout(() => {
+        icon.classList.remove('icon-animation');
+    }, 300); // 300ms should match the duration of your animation
+});
 
 
 // File Name // 
@@ -47,13 +56,26 @@ function addStories() {
     const mediaInput = document.getElementById('mediaInput');
     const storyTitleInput = document.getElementById('storyTitle');
     const files = Array.from(mediaInput.files);
-    const storyTitle = storyTitleInput.value.trim() || "Untitled Story";
+    const storyTitle = storyTitleInput.value.trim();
+    
+    if (!storyTitle.trim()) {
+        alert("The story title should not be empty.");
+        return; // Stop further execution if title is empty
+    }
 
     if (files.length === 0) {
         alert('Please select at least one image or video.');
         return;
     }
 
+    // Confirmation box before adding stories
+    const confirmPost = window.confirm("Are you sure you want to post these stories?");
+    
+    if (!confirmPost) {
+        return; // If user clicks "Cancel", do nothing
+    }
+
+    // If confirmed, proceed with adding stories
     files.forEach((file) => {
         const storyElement = document.createElement('div');
         storyElement.classList.add('story');
@@ -85,8 +107,15 @@ function addStories() {
         storiesContainer.appendChild(storyElement);
     });
 
+    // Clear the title input and file input (reset the selected files)
     storyTitleInput.value = '';
     mediaInput.value = '';
+
+    // Clear the filename display (replace this with your actual element's ID or class)
+    const fileNameDisplay = document.getElementById('fileNameDisplay'); // Adjust the selector as needed
+    if (fileNameDisplay) {
+        fileNameDisplay.textContent = ''; // Reset the filename display
+    }
 
     updateNavigationButtons(); // Update navigation buttons after stories are added
 }
