@@ -239,3 +239,21 @@ const createStories = () => {
 };
 
 createStories();
+
+const prevButton = document.querySelector('.previous-btn');
+const nextButton = document.querySelector('.next-btn');
+const storyContainer = document.querySelector('.stories-container .content');
+
+prevButton.addEventListener('click', () => {
+    storyContainer.scrollBy({
+        left: -storyContainer.offsetWidth,
+        behavior: 'smooth'
+    });
+});
+
+nextButton.addEventListener('click', () => {
+    storyContainer.scrollBy({
+        left: storyContainer.offsetWidth,
+        behavior: 'smooth'
+    });
+});

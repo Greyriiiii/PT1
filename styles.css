@@ -272,6 +272,8 @@ h2 {
     overflow-y: hidden;
     scroll-snap-type: x mandatory; /* Ensure snapping starts from the left */
     border-radius: 10px;
+    position: relative;
+    overflow: hidden; /* Hide the horizontal scroll */
 }
 
 .stories-container .previous-btn,
@@ -285,8 +287,9 @@ h2 {
     color: #fff;
     border-radius: 50%;
     padding: 10px;
-    display: flex;
     cursor: pointer;
+    display: block;
+    z-index: 5; /* Ensure it stays above other content */
 
 }
 
@@ -350,9 +353,9 @@ h2 {
 
 .stories-container .content {
     display: flex;
-    overflow-x: auto;
-    white-space: nowrap;
-    scroll-behavior: smooth;
+    gap: 10px;
+    overflow-x: scroll; /* Allows scrolling */
+    scroll-snap-type: x mandatory;
 }
 
 .stories-container .content::-webkit-scrollbar {
