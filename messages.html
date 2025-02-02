@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap" rel="stylesheet">
+    <link rel="icon" href="https://img.icons8.com/?size=100&id=118491&format=png&color=4883E9" type="image/png">
+    <title>Social Media Platform</title>
+    <script src="script.js" defer></script>
+    <style>
+        .messenger-container {
+            display: flex;
+            height: 100vh;
+        }
+        .sidebar {
+            width: 25%;
+            background: #fff;
+            border-right: 1px solid #ddd;
+            padding: 10px;
+            overflow-y: auto;
+        }
+        .contact {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+        .contact:hover {
+            background: #e4e6eb;
+        }
+        .contact img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            height: 100vh;
+        }
+        .chat-header {
+            padding: 15px;
+            background: #0078ff;
+            color: white;
+            font-weight: bold;
+        }
+        .messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            max-height: calc(100vh - 120px);
+        }
+        .message {
+            max-width: 70%;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 10px;
+            word-wrap: break-word;
+        }
+        .sent {
+            align-self: flex-end;
+            background: #0078ff;
+            color: white;
+        }
+        .received {
+            align-self: flex-start;
+            background: #e4e6eb;
+        }
+        .input-container {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+            position: fixed;
+            bottom: 0;
+            width: 75%;
+            background: white;
+        }
+        .input-container input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 20px;
+            outline: none;
+            background: #f0f2f5;
+        }
+        .input-container button {
+            margin-left: 10px;
+            padding: 10px 15px;
+            border: none;
+            background: #0078ff;
+            color: white;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        .input-container button:hover {
+            background: #005ecb;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="#" class="logo">&emsp;FaceApp</a>
+        <div class="nav-links">
+            <a href="index.html"><span class="material-symbols-outlined">home</span></a>
+            <a href="account.html"><span class="material-symbols-outlined">account_circle</span></a>
+            <a href="messages.html"><span class="material-symbols-outlined">mail</span></a>
+            <div class="dropdown">
+                <button class="dropbtn"><span class="material-symbols-outlined">person</span></button>
+                <div class="dropdown-content">
+                    <a href="#"><span class="material-symbols-outlined">settings</span>Setting & privacy</a>
+                    <a href="#"><span class="material-symbols-outlined">help</span>Help & Support</a>
+                    <a href="#" class="toggle-btn" id="darkModeToggle"><span class="material-symbols-outlined">dark_mode</span>Display Accessibility</a>
+                    <a href="https://blankwhitescreen.com/"><span class="material-symbols-outlined">logout</span>&ensp;Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="messenger-container">
+        <div class="sidebar">
+            <h3>Chats</h3>
+            <div class="contact" onclick="startChat('John Doe')">
+                <img src="https://via.placeholder.com/40" alt="User">
+                <span>John Doe</span>
+            </div>
+            <div class="contact" onclick="startChat('Jane Smith')">
+                <img src="https://via.placeholder.com/40" alt="User">
+                <span>Jane Smith</span>
+            </div>
+        </div>
+        
+        <div class="chat-container">
+            <div class="chat-header">Select a chat</div>
+            <div class="messages"></div>
+            <div class="input-container">
+                <input type="text" id="messageInput" placeholder="Type a message...">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function startChat(name) {
+            document.querySelector(".chat-header").textContent = name;
+            document.querySelector(".messages").innerHTML = "";
+        }
+
+        function sendMessage() {
+            const input = document.getElementById("messageInput");
+            const messageText = input.value.trim();
+            
+            if (messageText === "") return;
+
+            const messageDiv = document.createElement("div");
+            messageDiv.classList.add("message", "sent");
+            messageDiv.textContent = messageText;
+
+            document.querySelector(".messages").appendChild(messageDiv);
+            input.value = "";
+
+            setTimeout(() => {
+                const responseDiv = document.createElement("div");
+                responseDiv.classList.add("message", "received");
+                responseDiv.textContent = "Got it!";
+                document.querySelector(".messages").appendChild(responseDiv);
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
