@@ -1,94 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Social Media Platform</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap" rel="stylesheet">
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
     <link rel="icon" href="https://img.icons8.com/?size=100&id=118491&format=png&color=4883E9" type="image/png">
     <title>Social Media Platform</title>
->>>>>>> Stashed changes
     <script src="script.js" defer></script>
 </head>
-
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">
-            <h1>FaceApp</h1>
-        </div>
-        <div class="wrapper">
-            <input hidden class="radio-1" name="radio" id="radio-1" type="radio" checked />
-            <a href="home.html">
-                <label style="--index: 0;" class="label" for="radio-1">
-                    <span class="material-symbols-outlined">home</span>
-                </label>
-            </a>
 
-            <input hidden class="radio-2" name="radio" id="radio-2" type="radio" />
-            <a href="profile.html">
-                <label style="--index: 2;" class="label" for="radio-2">
-                    <span class="material-symbols-outlined">account_circle</span>
-                </label>
-            </a>
+    <div class="navbar">
+        <a href="#" class="logo">&emsp;FaceApp</a>
 
-            <input hidden class="radio-3" name="radio" id="radio-3" type="radio" />
-            <a href="messages.html">
-                <label style="--index: 3;" class="label" for="radio-3">
-                    <span class="material-symbols-outlined">mail</span>
-                </label>
-            </a>
-            <div class="nav-wrapper">
-                <!-- Dropdown Toggle (Radio Button) -->
-                <input hidden class="radio-4" name="radio" id="radio-4" type="radio" />
-                <label class="label" for="radio-4">
-                    <span class="material-symbols-outlined">account_box</span>
-                </label>
-            
-                <!-- Dropdown Menu -->
-                <div class="dropdown-menu">
-                    <ul>
-                        <li><a href="#"><span class="material-symbols-outlined">
-                            settings
-                            </span> Setting & privacy ></a></li>
-                        <li><a href="#"> <span class="material-symbols-outlined">
-                            help
-                            </span> Help & Support ></a></li>
-                        <li><a href="#"><span class="material-symbols-outlined">
-                            dark_mode
-                            </span> Display Accessibilty ></a></li>
-                        <li><a href="#"><span class="material-symbols-outlined">
-                            logout
-                            </span> Logout</a></li>
-                    </ul>
+        <div class="nav-links">
+            <a href="index.html"><span class="material-symbols-outlined">home</span></a>
+            <a href="account.html"><span class="material-symbols-outlined">account_circle</span></a>
+            <a href="messages.html"><span class="material-symbols-outlined">mail</span></a>
+
+            <!-- Dropdown Menu for Account -->
+            <div class="dropdown">
+                <button class="dropbtn"><span class="material-symbols-outlined">person</span></button>
+                <div class="dropdown-content">
+                    <a href="#"><span class="material-symbols-outlined">settings</span>Setting & privacy</a>
+                    <a href="#"><span class="material-symbols-outlined">help</span>Help & Support</a>
+                    <a href="#" class="toggle-btn" id="darkModeToggle"><span class="material-symbols-outlined">dark_mode</span>Display Accessibility</a>
+                    <a href="https://blankwhitescreen.com/"><span class="material-symbols-outlined">logout</span>&ensp;Logout</a>
                 </div>
             </div>
-            
-            <div class="bar"></div>
-            <div class="slidebar"></div>
         </div>
-    </header>
-    <!--Main Content -->
+    </div>
+
     <div class="upload-container">
         <h2>Create a Story</h2>
-<<<<<<< Updated upstream
-        <input type="file" id="mediaInput" accept="image/*,video/*" multiple>
-        <input type="text" id="storyTitle" placeholder="Enter story title">
-        <button onclick="addStories ()">Post Stories</button>
-
-    </div>
-    <div class="stories-container" id="storiesContainer">
-        <div class="story add-story" onclick="document.getElementById('mediaInput').click()">
-            +
-        </div>
-=======
         <input type="text" id="storyTitle" placeholder="Enter story title ">
         <div id="fileNameDisplay"></div>
         <input type="file" id="mediaInput" accept="image/*,video/*" multiple>
@@ -96,15 +41,11 @@
             <span class="material-symbols-outlined">add_a_photo</span>
         </label>
         <button onclick="addStories()">Post Stories</button>
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     </div>
 
     <div class="stories-container" id="storiesContainer">
-        <div class="content">
-            <div class="previous-btn">
+        <div class="content" id="storiesContent">
+            <div class="previous-btn" id="previousBtn">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
                 </svg>                  
@@ -114,13 +55,14 @@
             <div class="story add-story" onclick="document.getElementById('mediaInput').click()">
                 +
             </div>
-            <div class="next-btn">
+            <div class="next-btn" id="nextBtn">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
                 </svg>     
             </div>
         </div>
     </div>
+    
 
     <!-- Story Viewer with Previous and Next buttons -->
     <div class="story-viewer" id="storyViewer">
@@ -149,5 +91,4 @@
     </footer>
 
 </body>
-
 </html>

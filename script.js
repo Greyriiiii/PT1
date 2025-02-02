@@ -1,3 +1,46 @@
+// Dark Mode//
+// Dark Mode Toggle
+const darkModeToggle = document.getElementById('darkModeToggle');
+const body = document.body;
+
+darkModeToggle.addEventListener('click', function() {
+    body.classList.toggle('dark-mode');
+    const icon = darkModeToggle.querySelector('.material-symbols-outlined');
+
+    // Add animation class
+    icon.classList.add('icon-animation');
+
+    // Change the icon text content based on dark mode status
+    if (body.classList.contains('dark-mode')) {
+        icon.textContent = 'light_mode';  // Change icon to 'light_mode'
+    } else {
+        icon.textContent = 'dark_mode';   // Change icon back to 'dark_mode'
+    }
+
+    // Remove the animation class after animation duration to reset
+    setTimeout(() => {
+        icon.classList.remove('icon-animation');
+    }, 300); // 300ms should match the duration of your animation
+});
+
+
+// File Name // 
+// JavaScript to display the uploaded file name
+document.getElementById('mediaInput').addEventListener('change', function() {
+    var fileInput = document.getElementById('mediaInput');
+    var fileNameDisplay = document.getElementById('fileNameDisplay');
+    
+    // Check if files are selected
+    if (fileInput.files.length > 0) {
+        var fileName = fileInput.files[0].name;  // Get the name of the first file
+        fileNameDisplay.textContent = 'Selected File: ' + fileName; // Display the file name
+    } else {
+        fileNameDisplay.textContent = '';  // Clear the file name display if no file is selected
+    }
+});
+
+// For Stories //
+
 const storiesContainer = document.getElementById('storiesContainer');
 const storyViewer = document.getElementById('storyViewer');
 const storyViewerContent = document.getElementById('storyViewerContent');
@@ -8,61 +51,31 @@ let storyQueue = [];
 let currentStoryIndex = 0;
 let progressTimeout;
 
-const previousBtn = document.querySelector('.stories-container .previous-btn');
-const nextBtn = document.querySelector('.stories-container .next-btn');
-
-// Function to update the visibility of the previous and next buttons
-function updateNavigationButtons() {
-    const totalStories = storiesContainer.querySelectorAll('.story').length;
-    const containerWidth = storiesContainer.offsetWidth;
-    const storiesWidth = storiesContainer.scrollWidth;
-
-    // Only show navigation buttons if there are more than one story and the total width exceeds the container width
-    if (totalStories > 1 && storiesWidth > containerWidth) {
-        previousBtn.style.display = storiesContainer.scrollLeft > 0 ? 'flex' : 'none';
-        nextBtn.style.display = storiesContainer.scrollLeft < storiesWidth - containerWidth ? 'flex' : 'none';
-    } else {
-        previousBtn.style.display = 'none';
-        nextBtn.style.display = 'none';
-    }
-}
-
-// Function to show the next story
-function showNextStory() {
-    const stories = storiesContainer.querySelectorAll('.story');
-    if (currentStoryIndex < stories.length - 1) {
-        currentStoryIndex++;
-        storiesContainer.scrollLeft = stories[currentStoryIndex].offsetLeft;
-    }
-    updateNavigationButtons();
-}
-
-// Function to show the previous story
-function showPreviousStory() {
-    const stories = storiesContainer.querySelectorAll('.story');
-    if (currentStoryIndex > 0) {
-        currentStoryIndex--;
-        storiesContainer.scrollLeft = stories[currentStoryIndex].offsetLeft;
-    }
-    updateNavigationButtons();
-}
-
-// Event listeners for next and previous buttons
-nextBtn.addEventListener('click', showNextStory);
-previousBtn.addEventListener('click', showPreviousStory);
-
 // Function to add stories
 function addStories() {
     const mediaInput = document.getElementById('mediaInput');
     const storyTitleInput = document.getElementById('storyTitle');
     const files = Array.from(mediaInput.files);
-    const storyTitle = storyTitleInput.value.trim() || "Untitled Story";
+    const storyTitle = storyTitleInput.value.trim();
+    
+    if (!storyTitle.trim()) {
+        alert("The story title should not be empty.");
+        return; // Stop further execution if title is empty
+    }
 
     if (files.length === 0) {
         alert('Please select at least one image or video.');
         return;
     }
 
+    // Confirmation box before adding stories
+    const confirmPost = window.confirm("Are you sure you want to post these stories?");
+    
+    if (!confirmPost) {
+        return; // If user clicks "Cancel", do nothing
+    }
+
+    // If confirmed, proceed with adding stories
     files.forEach((file) => {
         const storyElement = document.createElement('div');
         storyElement.classList.add('story');
@@ -94,29 +107,33 @@ function addStories() {
         storiesContainer.appendChild(storyElement);
     });
 
+    // Clear the title input and file input (reset the selected files)
     storyTitleInput.value = '';
     mediaInput.value = '';
+
+    // Clear the filename display (replace this with your actual element's ID or class)
+    const fileNameDisplay = document.getElementById('fileNameDisplay'); // Adjust the selector as needed
+    if (fileNameDisplay) {
+        fileNameDisplay.textContent = ''; // Reset the filename display
+    }
 
     updateNavigationButtons(); // Update navigation buttons after stories are added
 }
 
-// Function to show a specific story
+// Function to show a story
 function showStory(index) {
     if (index < 0 || index >= storyQueue.length) {
-        storyViewer.classList.remove('active');
-        clearTimeout(progressTimeout);
+        closeStoryViewer();
         return;
     }
 
-    const story = storyQueue[index];
+    currentStoryIndex = index;
+    const story = storyQueue[currentStoryIndex];
+
     storyViewerContent.innerHTML = '';
     storyViewerTitle.textContent = story.title;
-
-    // Hide footer when viewing stories
     let footer = document.querySelector("footer");
-    if (footer) {
-        footer.style.display = "none";
-    }
+    if (footer) footer.style.display = "none";
 
     const closeButton = document.createElement('button');
     closeButton.textContent = 'X';
@@ -124,59 +141,49 @@ function showStory(index) {
     closeButton.addEventListener('click', closeStoryViewer);
     storyViewerContent.appendChild(closeButton);
 
-    // Apply 9:16 aspect ratio
-    storyViewerContent.style.display = "flex";
-    storyViewerContent.style.justifyContent = "center";
-    storyViewerContent.style.alignItems = "center";
-    storyViewerContent.style.width = "100%";
-    storyViewerContent.style.height = "100vh"; // Full screen height
-
     if (story.type === 'image') {
         const img = document.createElement('img');
         img.src = story.src;
-        img.style.width = "auto";
         img.style.height = "100%"; // Maintain 9:16 aspect ratio
         img.style.maxWidth = "56.25vh"; // Ensures 9:16 ratio (9/16 = 0.5625)
         img.style.objectFit = "cover"; // Ensures it fits properly
         storyViewerContent.appendChild(img);
-        updateProgressBar(5000, () => showNextStory(index));
-    } else if (story.type === 'video') {
+        updateProgressBar(5000, showNextStory);
+    } else {
         const video = document.createElement('video');
         video.src = story.src;
         video.autoplay = true;
         video.controls = true;
-        video.style.width = "auto";
         video.style.height = "100%"; // Maintain 9:16 aspect ratio
-        video.style.maxWidth = "56.25vh"; // Ensures 9:16 ratio
+        video.style.maxWidth = "56.25vh";
         video.style.objectFit = "cover";
         storyViewerContent.appendChild(video);
 
         video.onloadedmetadata = () => {
-            updateProgressBar(video.duration * 1000, () => showNextStory(index));
+            updateProgressBar(video.duration * 1000, showNextStory);
         };
 
-        video.onended = () => {
-            showNextStory(index);
-        };
+        video.onended = showNextStory;
     }
 
     storyViewer.classList.add('active');
 }
 
-// Function to close story viewer
+// Close story viewer
 function closeStoryViewer() {
     storyViewer.classList.remove('active');
     clearTimeout(progressTimeout);
 
-    // Stop any playing video
+    let footer = document.querySelector("footer");
+    if (footer) footer.style.display = "block";
+
     const video = storyViewerContent.querySelector('video');
     if (video) {
         video.pause();
-        video.currentTime = 0; // Reset to start
+        video.currentTime = 0;
     }
 
-    let footer = document.querySelector("footer");
-    if (footer) footer.style.display = "block";
+    progressBar.style.width = '0%';
 }
 
 // Function to update the progress bar
@@ -189,11 +196,25 @@ function updateProgressBar(duration, callback) {
         progressBar.style.width = '100%';
 
         progressTimeout = setTimeout(() => {
-            if (typeof callback === 'function') {
-                callback();
-            }
+            if (typeof callback === 'function') callback();
         }, duration);
     });
+}
+
+// Show next story
+function showNextStory() {
+    if (currentStoryIndex < storyQueue.length - 1) {
+        showStory(currentStoryIndex + 1);
+    } else {
+        closeStoryViewer(); // Close viewer if no more stories
+    }
+}
+
+// Show previous story
+function showPreviousStory() {
+    if (currentStoryIndex > 0) {
+        showStory(currentStoryIndex - 1);
+    }
 }
 
 // Create the initial stories when page loads or after upload
