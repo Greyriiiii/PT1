@@ -240,20 +240,39 @@ const createStories = () => {
 
 createStories();
 
-const prevButton = document.querySelector('.previous-btn');
-const nextButton = document.querySelector('.next-btn');
-const storyContainer = document.querySelector('.stories-container .content');
+function scrollLeft() {
+    const container = document.getElementById("storiesContainer");
+    container.scrollBy({ left: -120, behavior: 'smooth' });
+}
 
-prevButton.addEventListener('click', () => {
-    storyContainer.scrollBy({
-        left: -storyContainer.offsetWidth,
-        behavior: 'smooth'
-    });
-});
+function scrollRight() {
+    const container = document.getElementById("storiesContainer");
+    container.scrollBy({ left: 120, behavior: 'smooth' });
+}
 
-nextButton.addEventListener('click', () => {
-    storyContainer.scrollBy({
-        left: storyContainer.offsetWidth,
-        behavior: 'smooth'
+document.addEventListener("DOMContentLoaded", function () {
+    const container = document.getElementById("storiesContainer");
+    const prevButton = document.getElementById("prevButton");
+    const nextButton = document.getElementById("nextButton");
+    
+    // Show prevButton when nextButton is clicked
+    nextButton.addEventListener("click", function () {
+        scrollRight();
+        setTimeout(() => {
+            prevButton.style.visibility = "visible"; // Ensure it becomes visible
+            updateButtonVisibility();
+        }, 200);
     });
+
+    // Hide prevButton when reaching the start
+    prevButton.addEventListener("click", function () {
+        scrollLeft();
+        setTimeout(updateButtonVisibility, 200);
+    });
+
+    // Attach event listener to update visibility on manual scrolling
+    container.addEventListener("scroll", updateButtonVisibility);
+
+    // Call the function initially to set correct visibility on page load
+    updateButtonVisibility();
 });
