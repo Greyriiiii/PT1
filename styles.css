@@ -34,6 +34,34 @@ h2 {
     scroll-snap-type: x mandatory; /* Ensure snapping starts from the left */
 }
 
+.stories-container .previous-btn,
+.stories-container .next-btn,
+.stories-full-view .previous-btn,
+.stories-full-view .next-btn {
+    width: 30px;
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #444;
+    color: #fff;
+    border-radius: 50%;
+    padding: 10px;
+    display: flex;
+    cursor: pointer;
+
+}
+
+.stories-container .previous-btn,
+.stories-full-view .previous-btn{
+    left: 8px;
+}
+
+.stories-container .next-btn,
+.stories-full-view .next-btn{
+    right: 8px;
+}
+
 .stories-container .add-story {
     display: flex;
     justify-content: center;
@@ -52,10 +80,19 @@ h2 {
 
 .stories-container .add-story:hover {
     background-color: darkblue;
+<<<<<<< Updated upstream
 }
 
 .story {
     width: 120px;
+=======
+    color: white;
+    opacity: 50%;
+}
+
+.stories-container .story {
+    width: 135px;
+>>>>>>> Stashed changes
     height: 213px; /* 9:16 aspect ratio */
     margin-right: 10px;
     border-radius: 10px;
@@ -66,9 +103,11 @@ h2 {
     justify-content: center;
     align-items: center;
     scroll-snap-align: start; /* Ensure snapping starts from the left side of each item */
+    flex-shrink: 0; /* Prevent items from shrinking */
+    overflow: hidden;
 }
 
-.story img, .story video {
+.stories-container .story img, .story video {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -106,6 +145,37 @@ h2 {
 .upload-container button:hover {
     background-color: #0c284e;
 }
+
+.stories-container .stories {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+}
+
+.stories-container .content {
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    scroll-behavior: smooth;
+}
+
+.stories-container .content::-webkit-scrollbar {
+    display: none;
+} 
+
+.stories-container .author{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 8px 16px;
+    font-size: 15px;
+    font-family: "roboto", sans-serif;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(transparent, #222 130%);
+}
+
 
 /* Story Viewer */
 .story-viewer {
@@ -404,6 +474,9 @@ a {
     background: rgba(0, 0, 0, 0.9);
     display: none;
     place-items: center;
+    inset: 0;
+    z-index: 5;
+    background: rgba(0, 0, 0, 0.9);
 }
 
 .stories-full-view.active {
