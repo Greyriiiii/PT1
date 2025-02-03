@@ -204,6 +204,9 @@ h2 {
 #mediaInput {
     display: none;
 }
+#audioInput {
+    display: none;
+}
 
 #fileNameDisplay {
     margin-bottom: 10px;

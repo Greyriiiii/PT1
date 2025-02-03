@@ -37,10 +37,18 @@
         <input type="text" id="storyTitle" placeholder="Enter story title ">
         <!-- Display file name after uploading -->
         <div id="fileNameDisplay"></div>
-        <input type="file" id="mediaInput" accept="image/*,video/*" multiple>
-        <label for="mediaInput" class="file-upload-label">
-            <span class="material-symbols-outlined">add_a_photo</span>
+                <!-- Image & Video Upload -->
+                <input type="file" id="mediaInput" accept="image/*,video/*" multiple>
+                <label for="mediaInput" class="file-upload-label">
+                    <span class="material-symbols-outlined">add_a_photo</span>
+                </label>
+
+        <!-- Audio Upload -->
+        <input type="file" id="audioInput" accept="audio/mp3, audio/*" multiple title="Select one or more audio files to upload">
+        <label for="audioInput" class="file-upload-label" title="Add Music to your story">
+            <span class="material-symbols-outlined">music_note</span>
         </label>
+      
         <!-- Button to post the story -->
         <button onclick="addStories()">Post Stories</button>
     </div>
