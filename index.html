@@ -34,24 +34,29 @@
 
     <div class="upload-container">
         <h2>Create a Story</h2>
-        <input type="text" id="storyTitle" placeholder="Enter story title ">
+        <div class="upload-content">
+            <div class="image-preview">
+                <img src="images/your-image.jpg" alt="Profile Image" id="profileImage" onclick="changeProfileImage()">
+            </div>
+            <input type="text" id="storyTitle" placeholder="Enter story title">
+        </div>
         <!-- Display file name after uploading -->
         <div id="fileNameDisplay"></div>
-                <!-- Image & Video Upload -->
-                <input type="file" id="mediaInput" accept="image/*,video/*" multiple>
-                <label for="mediaInput" class="file-upload-label">
-                    <span class="material-symbols-outlined">add_a_photo</span>
-                </label>
-
-        <!-- Audio Upload -->
-        <input type="file" id="audioInput" accept="audio/mp3, audio/*" multiple title="Select one or more audio files to upload">
-        <label for="audioInput" class="file-upload-label" title="Add Music to your story">
-            <span class="material-symbols-outlined">music_note</span>
+        
+        <!-- Separate input for story media (images or videos) -->
+        <input type="file" id="mediaInput" accept="image/*,video/*" multiple onchange="previewImage()">
+        
+        <label for="mediaInput" class="file-upload-label">
+            <span class="material-symbols-outlined">add_a_photo</span>
         </label>
-      
+        
         <!-- Button to post the story -->
         <button onclick="addStories()">Post Stories</button>
     </div>
+    
+    <!-- Separate profile image input -->
+    <input type="file" id="profileImageInput" accept="image/*" style="display: none" onchange="previewProfileImage()">
+    
     
     <div class="stories-container" id="storiesContainer">
         <div class="stories"></div>

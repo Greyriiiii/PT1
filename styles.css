@@ -161,6 +161,41 @@ body {
     text-align: right;
 }
 
+/* Layout for the upload content */
+.upload-container .upload-content {
+    display: flex; /* Use flexbox for horizontal layout */
+    align-items: center; /* Vertically center align */
+    gap: 10px; /* Adjust the space between the image and the input field */
+}
+
+/* Style for the image preview */
+.upload-container .image-preview {
+    width: 60px; /* Adjust the size of the image */
+    height: 60px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Ensure the image fits the container */
+.upload-content .image-preview img {
+    width: 50px; /* Adjust the size of the image */
+    height: 50px; /* Ensure the height and width are equal */
+    border-radius: 50%; /* Make the image round */
+    object-fit: cover; /* Ensure the image maintains aspect ratio and covers the area */
+    margin-right: 10px; /* Space between the image and the input box */
+}
+
+/* Style for the text input field */
+.upload-container input[type="text"] {
+    border-radius: 8px;
+    border: 1px solid #212121;
+    padding: 10px;
+    font-size: 14px;
+    height: 40px;
+    flex-grow: 1; /* Allow the text input to take up available space */
+}
+
+
 .upload-container button {
     padding: 10px 10px;
     background-color: #1b56a8;
@@ -202,9 +237,6 @@ h2 {
 
 /* Uploading */
 #mediaInput {
-    display: none;
-}
-#audioInput {
     display: none;
 }
 
@@ -297,6 +329,7 @@ h2 {
 .stories-container .add-story:hover {
     background-color: darkblue;
     color: white;
+    opacity: 50%;
 }
 
 .story {

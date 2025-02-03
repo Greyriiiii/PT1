@@ -51,7 +51,7 @@ let storyQueue = [];
 let currentStoryIndex = 0;
 let progressTimeout;
 
-// Function to add stories
+// Add story function
 function addStories() {
     const mediaInput = document.getElementById('mediaInput');
     const storyTitleInput = document.getElementById('storyTitle');
@@ -112,7 +112,7 @@ function addStories() {
     mediaInput.value = '';
 
     // Clear the filename display (replace this with your actual element's ID or class)
-    const fileNameDisplay = document.getElementById('fileNameDisplay'); // Adjust the selector as needed
+    const fileNameDisplay = document.getElementById('fileNameDisplay');
     if (fileNameDisplay) {
         fileNameDisplay.textContent = ''; // Reset the filename display
     }
@@ -276,3 +276,43 @@ document.addEventListener("DOMContentLoaded", function () {
     // Call the function initially to set correct visibility on page load
     updateButtonVisibility();
 });
+
+// Change Profile Image (when clicking on the profile image)
+function changeProfileImage() {
+    // Trigger the profile image file input when the profile image is clicked
+    document.getElementById('profileImageInput').click();
+}
+
+// Preview the profile image (display it as the new profile picture)
+function previewProfileImage() {
+    const profileImageInput = document.getElementById('profileImageInput');
+    const profileImage = document.getElementById('profileImage');
+    const file = profileImageInput.files[0];
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            profileImage.src = e.target.result; // Update the profile image preview
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+// For Story Media
+function previewImage() {
+    const fileInput = document.getElementById('mediaInput');
+    const file = fileInput.files[0]; // Get the first selected file
+    const preview = document.getElementById('imagePreview');
+
+    if (file) {
+        const reader = new FileReader();
+
+        // Set up the onload function for the file reader
+        reader.onload = function(e) {
+            preview.src = e.target.result; // Update the src of the image with the selected file
+        };
+
+        // Read the file as a data URL
+        reader.readAsDataURL(file);
+    }
+}

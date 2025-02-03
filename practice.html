@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload and Editing Tool</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs/dist/cropper.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/video.js/7.11.4/video-js.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        #upload {
+            margin: 20px;
+        }
+        #preview {
+            max-width: 90%;
+            margin-top: 20px;
+            display: none;
+        }
+        #video-container {
+            display: none;
+            margin-top: 20px;
+        }
+        .controls {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Upload and Edit Image/Video</h2>
+<input type="file" id="upload" accept="image/*,video/*">
+<div id="image-container">
+    <img id="preview" src="" alt="Preview Image">
+</div>
+<div id="video-container">
+    <video id="video" class="video-js vjs-default-skin" controls>
+        <source id="video-source" src="" type="video/mp4">
+    </video>
+</div>
+
+<div class="controls">
+    <button id="rotate">Rotate</button>
+    <button id="crop">Crop Image</button>
+    <button id="trim">Trim Video</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/cropperjs"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/video.js/7.11.4/video.min.js"></script>
+<script>
+    let cropper;
+    let videoPlayer;
+
+    // Handle image/video upload
+    document.getElementById('upload').addEventListener('change', function (e) {
+        const file = e.target.files[0];
+        if (file) {
+            const fileURL = URL.createObjectURL(file);
+
+            if (file.type.startsWith('image/')) {
+                document.getElementById('video-container').style.display = 'none';
+                const preview = document.getElementById('preview');
+                preview.src = fileURL;
+                preview.style.display = 'block';
+                if (cropper) {
+                    cropper.destroy();
+                }
+                cropper = new Cropper(preview, {
+                    aspectRatio: 16 / 9,
+                    viewMode: 1,
+                });
+            } else if (file.type.startsWith('video/')) {
+                document.getElementById('image-container').style.display = 'none';
+                const videoElement = document.getElementById('video');
+                document.getElementById('video-source').src = fileURL;
+                videoElement.load();
+                videoElement.style.display = 'block';
+                videoPlayer = video.js('video');
+            }
+        }
+    });
+
+    // Rotate image
+    document.getElementById('rotate').addEventListener('click', () => {
+        if (cropper) {
+            cropper.rotate(90);
+        }
+    });
+
+    // Crop image
+    document.getElementById('crop').addEventListener('click', () => {
+        if (cropper) {
+            const canvas = cropper.getCroppedCanvas();
+            document.getElementById('preview').src = canvas.toDataURL();
+        }
+    });
+
+    // Trim video
+    document.getElementById('trim').addEventListener('click', () => {
+        if (videoPlayer) {
+            const currentTime = videoPlayer.currentTime();
+            const duration = videoPlayer.duration();
+            const trimStart = currentTime + 5; // start trimming 5 seconds from current time
+            const trimEnd = duration - 5; // end trimming 5 seconds before the end
+
+            videoPlayer.currentTime(trimStart);
+            setTimeout(() => {
+                videoPlayer.pause();
+            }, (trimEnd - trimStart) * 1000); // Stop trimming after the duration
+        }
+    });
+</script>
+
+</body>
+</html>
