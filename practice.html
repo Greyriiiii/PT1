@@ -3,122 +3,209 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Upload and Editing Tool</title>
+    <title>Social Media Platform</title>
+    
+    <!-- Styles & Icons -->
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap" rel="stylesheet">
+    <link rel="icon" href="images/f.png" type="image/png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs/dist/cropper.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/video.js/7.11.4/video-js.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background-color: #f4f4f4;
-        }
-        #upload {
-            margin: 20px;
-        }
-        #preview {
-            max-width: 90%;
-            margin-top: 20px;
-            display: none;
-        }
-        #video-container {
-            display: none;
-            margin-top: 20px;
-        }
-        .controls {
-            margin-top: 20px;
-        }
-    </style>
+
+    <!-- Scripts -->
+    <script src="script.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/ffmpeg.js/ffmpeg.min.js"></script>
 </head>
 <body>
 
-<h2>Upload and Edit Image/Video</h2>
-<input type="file" id="upload" accept="image/*,video/*">
-<div id="image-container">
-    <img id="preview" src="" alt="Preview Image">
+    <!-- Navbar -->
+    <div class="navbar">
+        <a href="#" class="logo">&ensp;FriendZone.</a>
+
+        <div class="nav-links">
+            <a href="index.html"><span class="material-symbols-outlined">home</span></a>
+            <a href="account/account.html"><span class="material-symbols-outlined">account_circle</span></a>
+            <a href="messages/messages.html"><span class="material-symbols-outlined">mail</span></a>
+
+            <!-- Account Dropdown -->
+            <div class="dropdown">
+                <button class="dropbtn"><span class="material-symbols-outlined">person</span></button>
+                <div class="dropdown-content">
+                    <a href="#"><span class="material-symbols-outlined">settings</span> Setting & Privacy</a>
+                    <a href="#"><span class="material-symbols-outlined">help</span> Help & Support</a>
+                    <a href="#" id="darkModeToggle"><span class="material-symbols-outlined">dark_mode</span> Display Accessibility</a>
+                    <a href="https://blankwhitescreen.com/"><span class="material-symbols-outlined">logout</span> Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Story Upload Section -->
+    <div class="upload-container">
+        <h2>Create a Story</h2>
+        <div class="upload-content">
+            <div class="image-preview">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4g_2Qj3LsNR-iqUAFm6ut2EQVcaou4u2YXw&s" alt="Profile Image" id="profileImage" onclick="changeProfileImage()">
+            </div>
+            <input type="text" id="storyTitle" placeholder="What's on your mind?">
+        </div>
+        
+        <div id="fileNameDisplay"></div>
+
+        <input type="file" id="mediaInput" accept="image/*,video/*" multiple onchange="previewImage()">
+        
+        <label for="mediaInput" class="file-upload-label">
+            <span class="material-symbols-outlined">add_a_photo</span>
+        </label>
+
+        <button onclick="addStories()">Post Stories</button>
+    </div>
+
+    <input type="file" id="profileImageInput" accept="image/*" style="display: none" onchange="previewProfileImage()">
+
+    <!-- Stories Section -->
+    <div class="stories-container" id="storiesContainer">
+        <div class="stories"></div>
+        <div class="story add-story" onclick="openModal()">+</div>
+    </div>
+
+<!-- Story Add Modal -->
+<div id="addStoryModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Add Story</h2>
+
+        <!-- File Input -->
+        <input type="file" id="storyFileInput" accept="image/*,video/*" onchange="previewStory()">
+        
+        <!-- Preview Area -->
+        <div id="storyPreview"></div>
+
+        <!-- Image Editing Tools -->
+        <div class="edit-tools" id="editTools">
+            <button onclick="rotateImage()">Rotate</button>
+            <button onclick="getCroppedImage()">Crop</button>
+            <button onclick="trimVideo()">Trim</button>
+        </div>
+
+        <input type="text" id="storyTitleModal" placeholder="Enter story title">
+
+        <button onclick="addStoryFromModal()">Post Story</button>
+    </div>
 </div>
-<div id="video-container">
-    <video id="video" class="video-js vjs-default-skin" controls>
-        <source id="video-source" src="" type="video/mp4">
-    </video>
-</div>
 
-<div class="controls">
-    <button id="rotate">Rotate</button>
-    <button id="crop">Crop Image</button>
-    <button id="trim">Trim Video</button>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/cropperjs"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/video.js/7.11.4/video.min.js"></script>
-<script>
-    let cropper;
-    let videoPlayer;
+    <!-- Navigation Buttons -->
+    <div class="navs">
+        <button id="prevButton" onclick="scrollLeft()">
+            <span class="material-symbols-outlined">chevron_left</span>
+        </button>
+        <button id="nextButton" onclick="scrollRight()">
+            <span class="material-symbols-outlined">chevron_right</span>
+        </button>
+    </div>
 
-    // Handle image/video upload
-    document.getElementById('upload').addEventListener('change', function (e) {
-        const file = e.target.files[0];
-        if (file) {
-            const fileURL = URL.createObjectURL(file);
+    <!-- Story Viewer -->
+    <div class="story-viewer" id="storyViewer">
+        <div class="story-viewer-title" id="storyViewerTitle"></div>
+        <div class="story-viewer-content" id="storyViewerContent"></div>
+        <div class="progress-bar">
+            <div class="progress" id="progressBar"></div>
+        </div>
+    </div>
 
-            if (file.type.startsWith('image/')) {
-                document.getElementById('video-container').style.display = 'none';
-                const preview = document.getElementById('preview');
-                preview.src = fileURL;
-                preview.style.display = 'block';
-                if (cropper) {
-                    cropper.destroy();
-                }
-                cropper = new Cropper(preview, {
-                    aspectRatio: 16 / 9,
-                    viewMode: 1,
-                });
-            } else if (file.type.startsWith('video/')) {
-                document.getElementById('image-container').style.display = 'none';
-                const videoElement = document.getElementById('video');
-                document.getElementById('video-source').src = fileURL;
-                videoElement.load();
-                videoElement.style.display = 'block';
-                videoPlayer = video.js('video');
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 My Social Platform</p>
+    </footer>
+
+    <!-- Cropper.js Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+    <script>
+        let cropper;
+        let croppedImage = null;
+
+        // Open modal to add story
+        function openModal() {
+            document.getElementById('addStoryModal').style.display = 'block';
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('addStoryModal').style.display = 'none';
+            if (cropper) {
+                cropper.destroy();
             }
         }
-    });
 
-    // Rotate image
-    document.getElementById('rotate').addEventListener('click', () => {
-        if (cropper) {
-            cropper.rotate(90);
+        // Preview uploaded story image
+        function previewStory() {
+            const file = document.getElementById('storyFileInput').files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imagePreview = document.getElementById('storyPreview');
+                    imagePreview.innerHTML = `<img src="${e.target.result}" id="storyImage" />`;
+                    
+                    // Initialize cropper
+                    if (cropper) {
+                        cropper.destroy();
+                    }
+
+                    const image = document.getElementById('storyImage');
+                    cropper = new Cropper(image, {
+                        aspectRatio: 1,
+                        viewMode: 1,
+                        scalable: true,
+                        zoomable: true,
+                        cropBoxResizable: true,
+                        movable: true,
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
         }
-    });
 
-    // Crop image
-    document.getElementById('crop').addEventListener('click', () => {
-        if (cropper) {
-            const canvas = cropper.getCroppedCanvas();
-            document.getElementById('preview').src = canvas.toDataURL();
+        // Rotate image
+        function rotateImage() {
+            if (cropper) {
+                cropper.rotate(90);
+            }
         }
-    });
 
-    // Trim video
-    document.getElementById('trim').addEventListener('click', () => {
-        if (videoPlayer) {
-            const currentTime = videoPlayer.currentTime();
-            const duration = videoPlayer.duration();
-            const trimStart = currentTime + 5; // start trimming 5 seconds from current time
-            const trimEnd = duration - 5; // end trimming 5 seconds before the end
-
-            videoPlayer.currentTime(trimStart);
-            setTimeout(() => {
-                videoPlayer.pause();
-            }, (trimEnd - trimStart) * 1000); // Stop trimming after the duration
+        // Get cropped image
+        function getCroppedImage() {
+            if (cropper) {
+                croppedImage = cropper.getCroppedCanvas().toDataURL();
+                document.getElementById('storyPreview').innerHTML = `<img src="${croppedImage}" />`;
+            }
         }
-    });
-</script>
 
+        // Add story from modal
+        function addStoryFromModal() {
+            if (croppedImage) {
+                const storiesContainer = document.getElementById('storiesContainer');
+                const storyDiv = document.createElement('div');
+                storyDiv.classList.add('story');
+                storyDiv.style.backgroundImage = `url(${croppedImage})`;
+                storiesContainer.appendChild(storyDiv);
+            }
+            closeModal();
+        }
+
+        // Add stories (dummy function for now)
+        function addStories() {
+            alert("Stories added!");
+        }
+
+        // Preview profile image (if needed)
+        function previewProfileImage() {
+            const file = document.getElementById('profileImageInput').files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('profileImage').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    </script>
 </body>
 </html>

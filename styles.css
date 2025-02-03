@@ -9,6 +9,7 @@
 body {
     font-family: Arial, sans-serif;
     transition: background-color 1.5s, color 1.5s;
+    background-color: whitesmoke;
 }
 
 .navbar {
@@ -507,45 +508,46 @@ h2 {
 /* Previous Button */
 #prevButton {
     position: absolute;
-    left: 47.5em; /* Set exact pixel positioning */
-    top: -8rem;
+    left: 47.5em; /* Position it on the left side */
+    top: -8rem; /* Vertically center it */
     transform: translateY(-50%);
     width: 35px; /* Fixed width */
     height: 35px; /* Fixed height */
     padding: 10px;
     border: none;
-    border-radius: 40px;
-    background-color: #8a8a8a;
-    color: #fff;
+    border-radius: 40px; /* Rounded corners */
+    background-color: #ffffff; /* White background like the next button */
+    color: #000000; /* Black text */
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 1;
-    visibility: hidden;
+    transition: background-color 1.5s, color 1.5s; /* Smooth color transition */
 }
 
 /* Next Button */
 #nextButton {
     position: absolute;
-    right: 47.5em; /* Set exact pixel positioning */
-    top: -8rem;
+    right: 47.5em; /* Position it on the right side */
+    top: -8rem; /* Vertically center it */
     transform: translateY(-50%);
     width: 35px; /* Fixed width */
     height: 35px; /* Fixed height */
     padding: 10px;
     border: none;
-    border-radius: 40px;
-    background-color: #ffffff;
-    color: #000000;
+    border-radius: 40px; /* Rounded corners */
+    background-color: #ffffff; /* White background */
+    color: #000000; /* Black text */
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 1;
-    transition: background-color 1.5s, color 1.5s; /* Added transition */
+    transition: background-color 1.5s, color 1.5s; /* Smooth color transition */
+}
 
-}.dark-mode #nextButton {
+.dark-mode #nextButton {
     background-color: #333;
     color: #ffffff;
     transition: background-color 1.5s, color 1.5s; /* Added transition */
@@ -553,4 +555,228 @@ h2 {
 #nextButton:hover {
     background-color: #8a8a8a;
     transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* messages styles */
+
+.messenger-container {
+    display: flex;
+    height: 100vh;
+    background-color: transparent;
+}
+
+.sidebar {
+    width: 25%;
+    border-right: 1px solid #ddd;
+    padding: 10px;
+    overflow-y: auto;
+}
+
+.contact {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 10px;
+    border: #000000 1px solid;
+    margin: 10px;
+}
+
+.contact:hover {
+    background: #e4e6eb;
+}
+
+.contact img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.chat-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.chat-header {
+    padding: 15px;
+    background: #0078ff;
+    font-weight: bold;
+    color:#fff
+}
+
+.messages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 120px);
+}
+
+.message {
+    max-width: 70%;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 10px;
+    word-wrap: break-word;
+}
+
+.sent {
+    align-self: flex-end;
+    color: black;
+    border: 1px solid #0077ff67;
+    transition: background-color 0.5s, color 0.5s; /* Added transition */
+}
+.dark-mode .sent {
+    background-color: #707070;
+    color: #fff;
+
+}
+.received {
+    align-self: flex-start;
+    border: 1px solid #ddd;
+}
+
+.input-container {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    position: fixed;
+    bottom: 0;
+    width: 75%;
+}
+
+.input-container input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    outline: none;
+    background: #f0f2f5;
+}
+
+.input-container button {
+    margin-left: 10px;
+    padding: 10px 15px;
+    border: none;
+    background: #0078ff;
+    color: white;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.input-container button:hover {
+    background: #005ecb;
+}
+/* accounts styles */
+.profile-container {
+    max-width: 800px;
+    margin: auto;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+.cover-photo {
+    width: 100%;
+    height: 250px;
+    background: url('https://via.placeholder.com/800x250') no-repeat center/cover;
+    position: relative;
+}
+.profile-picture {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 1px solid #212121;
+    position: absolute;
+    bottom: -60px;
+    left: 20px;
+}
+.dark-mode .profile-picture {
+    color: #212121;
+}
+.profile-info {
+    padding: 70px 20px 20px;
+}
+.profile-info h2 {
+    margin-bottom: 5px;
+}
+.profile-info p {
+    color: gray;
+}
+.profile-buttons {
+    margin-top: 10px;
+}
+.profile-buttons button {
+    padding: 10px;
+    margin-right: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.profile-buttons .add-friend {
+    background: #0078ff;
+    color: white;
+}
+.profile-buttons .message {
+    background: #e4e6eb;
+}
+.posts {
+    margin-top: 20px;
+    padding: 20px;
+}
+.post {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.modal {
+    display: none; /* Ensures modal is hidden initially */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    width: 80%;
+    max-width: 600px; /* Ensures the modal doesn't become too wide */
+    text-align: center;
+    border-radius: 10px;
+    position: relative;
+}
+
+.modal-content img, 
+.modal-content video {
+    max-width: 100%; /* Ensures media doesn't exceed modal width */
+    max-height: 80vh; /* Prevents modal from becoming too tall */
+    border-radius: 10px;
+    object-fit: contain; /* Ensures the entire image fits without distortion */
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 25px;
+    cursor: pointer;
+    color: black;
+    background: white;
+    border-radius: 50%;
+    padding: 5px 10px;
 }

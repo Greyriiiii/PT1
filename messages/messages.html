@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap" rel="stylesheet">
     <link rel="icon" href="/images/f.png" type="image/png">
     <title>Social Media Platform</title>
-    <script src="script.js" defer></script>
+    <script src="../script.js" defer></script>
 </head>
 <body>
     <div class="navbar">
@@ -32,11 +32,11 @@
         <div class="sidebar">
             <h3>Chats</h3>
             <div class="contact" onclick="startChat('John Doe')">
-                <img src="https://via.placeholder.com/40" alt="User">
+                <img src="https://scontent.fmnl24-1.fna.fbcdn.net/v/t39.30808-1/461561900_3671005233117505_7071447310877108832_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=103&ccb=1-7&_nc_sid=e99d92&_nc_eui2=AeG6vXW_ooLlfmjUGmCfBSFySWGnTJ_yujxJYadMn_K6PLDPYweBtaGcMVJ3AccKjYymCuVBfn2uiUKOST2F2WhM&_nc_ohc=Ejz1Je2R17oQ7kNvgFaLjxV&_nc_zt=24&_nc_ht=scontent.fmnl24-1.fna&_nc_gid=AOSRHgcTYqVtayUJqtXdWOV&oh=00_AYDyex5pEuNXMMr7mD_eFQwWG9DKJxStm5cb9YczwVE3rg&oe=67A69E0C" alt="User">
                 <span>John Doe</span>
             </div>
             <div class="contact" onclick="startChat('Jane Smith')">
-                <img src="https://via.placeholder.com/40" alt="User">
+                <img src="https://scontent.fmnl24-1.fna.fbcdn.net/v/t39.30808-1/466478411_3856443957960597_4442039395668352222_n.jpg?stp=c168.421.1304.1304a_dst-jpg_s200x200_tt6&_nc_cat=100&ccb=1-7&_nc_sid=e99d92&_nc_eui2=AeHKlnZsaXljJTrlql21d0HEv9pN44JN_hS_2k3jgk3-FJYhvdJrVsBLszqfK9N3s-eKaRlvcJ-pEZ4uFY4RJoqT&_nc_ohc=c6y599c-RKkQ7kNvgHLrIU6&_nc_zt=24&_nc_ht=scontent.fmnl24-1.fna&_nc_gid=AbNqitCR2m6_DnBe0lFj0px&oh=00_AYDuBh9vwrSAuVYBjMLGV980sNNaVNdn4RvqMwxakgtHqw&oe=67A6888A" alt="User">
                 <span>Jane Smith</span>
             </div>
         </div>
@@ -50,33 +50,5 @@
             </div>
         </div>
     </div>
-    
-    <script>
-        function startChat(name) {
-            document.querySelector(".chat-header").textContent = name;
-            document.querySelector(".messages").innerHTML = "";
-        }
-
-        function sendMessage() {
-            const input = document.getElementById("messageInput");
-            const messageText = input.value.trim();
-            
-            if (messageText === "") return;
-
-            const messageDiv = document.createElement("div");
-            messageDiv.classList.add("message", "sent");
-            messageDiv.textContent = messageText;
-
-            document.querySelector(".messages").appendChild(messageDiv);
-            input.value = "";
-
-            setTimeout(() => {
-                const responseDiv = document.createElement("div");
-                responseDiv.classList.add("message", "received");
-                responseDiv.textContent = "Got it!";
-                document.querySelector(".messages").appendChild(responseDiv);
-            }, 1000);
-        }
-    </script>
 </body>
 </html>
